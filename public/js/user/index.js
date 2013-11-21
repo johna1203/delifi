@@ -2,6 +2,13 @@ var UserIndex = function () {
     return {
         init: function () {
 
+            $('.select2').select2();
+
+            $("#tagInput").select2({
+                tags: []
+            });
+
+
             $('#contentForm').submit(
                 function (e) {
                     e.preventDefault();
@@ -19,21 +26,34 @@ var UserIndex = function () {
 
                                 if (data.title) {
                                     $('#responseDiv').show();
-                                    $('#titleInput').val(data.title);
+                                    $('#titleInput').text(data.title);
 
+                                    var ul = $('#images');
                                     if (data.images.length > 0) {
-                                        var ul = $('#images');
+                                        ul.show();
                                         ul.empty();
                                         for (i in data.images) {
+
+//                                            <div class="active item">
+//                                                <img src="assets/img/pics/img2-medium.jpg" alt="">
+//                                                </div>
+
                                             var img = $(document.createElement('img'));
                                             img.attr('src', data.images[i]);
-                                            img.attr('width','150');
 
-                                            var li = $(document.createElement('li'));
-                                            li.append(img);
-                                            ul.append(li);
+                                            var div = $(document.createElement('div'));
 
+                                            div.attr('class', 'item');
+                                            if (i == 0) {
+                                                div.addClass('active');
+                                            }
+                                            div.append(img);
+                                            ul.append(div);
                                         }
+
+                                        $('#myCarousel').carousel(0);
+                                    } else {
+                                        ul.hide();
                                     }
                                 }
                             }

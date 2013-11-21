@@ -17,9 +17,7 @@ class ContentController extends AbstractActionController
     {
         $url = "http://www.keenthemes.com/preview/metronic_admin/extra_search.html";
 
-        if(preg_match('/^(http|https):\/\//i', $url)) {
-            echo 'match';
-        }
+        echo $this->makeUri($url, '../images/test.jpg');
 
         $uri = UriFactory::factory($url);
 
@@ -74,16 +72,12 @@ class ContentController extends AbstractActionController
                     /** @var \DOMElement $_img */
                     $md5 = array();
                     foreach ($results as $_img) {
-                        $src      = $_img->getAttribute('src');
-                        if(preg_match('/^(http|https):\/\//i', $src)) {
-                            $imageUrl = $src;
-                        } else {
-                            $imageUrl = $baseUrl . '/' . $src;
-                        }
+                        $src = $_img->getAttribute('src');
+                        $imageUrl = $this->makeUri($uri->toString(),$src);
 
                         if (!in_array(md5($imageUrl), $md5)) {
                             $images[] = $imageUrl;
-                            $md5[] = md5($imageUrl);
+                            $md5[]    = md5($imageUrl);
                         }
                     }
                 }
@@ -102,6 +96,42 @@ class ContentController extends AbstractActionController
         return $result;
     }
 
+    function makeUri($base = '', $rel_path = '')
+    {
+        $base  = preg_replace('/\/[^\/]+$/', '/', $base);
+        $parse = parse_url($base);
+        if (preg_match('/^https?\:\/\//', $rel_path)) {
+            return $rel_path;
+        } elseif (preg_match('/^\/.+/', $rel_path)) {
+            $out = $parse['scheme'] . '://' . $parse['host'] . $rel_path;
+
+            return $out;
+        }
+        $tmp = array();
+        $a   = array();
+        $b   = array();
+        $tmp = explode('/', $parse['path']);
+        foreach ($tmp as $v) {
+            if ($v) {
+                array_push($a, $v);
+            }
+        }
+        $b = explode('/', $rel_path);
+        foreach ($b as $v) {
+            if (strcmp($v, '') == 0) {
+                continue;
+            } elseif ($v == '.') {
+            } elseif ($v == '..') {
+                array_pop($a);
+            } else {
+                array_push($a, $v);
+            }
+        }
+        $path = join('/', $a);
+        $out  = $parse['scheme'] . '://' . $parse['host'] . '/' . $path;
+
+        return $out;
+    }
 
 }
 
