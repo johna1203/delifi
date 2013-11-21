@@ -1,0 +1,17 @@
+<?php
+$loginUrl = $this->url('FBLogin/default', array('action' => 'login', 'controller' => 'index'));
+$logoutUrl = $this->url('FBLogin/default', array('action' => 'logout', 'controller' => 'index'));
+
+/** @var \User\Model\User $user */
+$user = $this->identity();
+?>
+
+<?php if (!$user) : ?>
+    <a href="<?php echo $loginUrl; ?>">LOGIN</a>
+<?php else : ?>
+    <?php echo $this->gravatar($user->getEmail()); ?>
+
+    <img src="http://graph.facebook.com/<?php echo $user->getScId()?>/picture?type=square" />
+
+    <a href="<?php echo $logoutUrl; ?>">LOGOUT</a>
+<?php endif; ?>

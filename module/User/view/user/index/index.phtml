@@ -1,0 +1,65 @@
+<?php $user = $this->identity();
+
+?>
+    <div class="row">
+        <div class="col-md-3">
+            <?php echo $this->gravatar($user->getEmail(), array('img_size' => '180'), array('class' => 'img-circle')); ?>
+        </div>
+        <div class="col-md-9">
+            <form id="contentForm" action="<?php echo $this->url('application/default', array('action' => 'getcontent', 'controller' => 'content')); ?>">
+                <div class="input-group" style="margin-top: 9%;">
+                    <input type="text" class="form-control" id="contentInput"/>
+                    <span class="input-group-btn"><button class="btn btn-default" type="submit">Go!</button></span>
+                </div>
+            </form>
+
+
+            <div id="responseDiv" class="form-group" style="display: none;">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="text" class="form-control" id="titleInput" />
+                <ul id="images">
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar2 navbar-default navbar-default2" role="navigation">
+        <div class="container">
+            <div class="navbar-header navbar-header2">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Business Casual</a>
+            </div>
+
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav nav2 navbar-nav navbar-nav2">
+                    <li>
+                        <a href="#"><?php echo $this->translate('All'); ?></a>
+                    </li>
+                    <?php
+                    /** @var \Application\Model\Category $category */
+                    foreach ($categories as $category): ?>
+                        <li>
+                            <a href="#"><?php echo $category->getCategoryName(); ?></a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+<?php
+$iniScript
+    = <<<JS
+jQuery(document).ready(function () {
+    UserIndex.init();
+});
+JS;
+
+$this->inlineScript()
+    ->appendFile($this->basePath() . '/js/user/index.js', 'text/javascript')
+    ->appendScript($iniScript, 'text/javascript');
