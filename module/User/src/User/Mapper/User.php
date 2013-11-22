@@ -23,11 +23,6 @@ class User extends AbstractMapper
     protected $entityPrototype = null;
     protected $hydrator = null;
 
-    function __construct(AdapterInterface $adapter)
-    {
-        parent::__construct($this->tableName, $adapter, new RowGatewayFeature($this->idCol));
-    }
-
     function init()
     {
         $this->entityPrototype = $this->getServiceManager()->get('User\Model\User');

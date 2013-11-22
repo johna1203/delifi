@@ -59,15 +59,6 @@ class ContentController extends AbstractActionController
                 $results = $dom->execute('img');
 
 
-                $path = $uri->getPath();
-
-                if (!empty($path) && mb_substr($path, -1) != '/') {
-                    $baseUrl = dirname($uri->toString());
-                } else {
-                    $baseUrl = $uri->toString();
-                }
-
-
                 if ($results->count() > 0) {
                     /** @var \DOMElement $_img */
                     $md5 = array();
